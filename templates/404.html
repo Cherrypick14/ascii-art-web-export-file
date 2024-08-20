@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Not Found</title>
+    <style>
+        /* Global Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            color: #fff; /* Same text color as index page */
+            background-color: #000000; /* Same background color as index page */
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(to right, rgb(94, 7, 7), rgb(9, 9, 122));
+            padding: 5px;
+            text-align: center;
+        }
+
+        .header-title {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 5rem;
+        }
+
+        .error-code {
+            font-size: 7rem;
+            font-weight: bold;
+            color: #fff; /* Text color for error code */
+            margin-bottom: 0.5rem;
+        }
+
+        .error-message {
+            font-size: 1.5rem;
+            color: #fff; /* Text color for error message */
+            margin-bottom: 1rem;
+        }
+
+        .emoji {
+            font-size: 4rem;
+            margin: 1rem 0;
+        }
+
+        .message {
+            font-size: 1rem;
+            color: #ccc; /* Lighter text color for message */
+            margin-top: 1rem;
+            animation: messageAnimation 3s ease-in-out infinite;
+        }
+
+        @keyframes messageAnimation {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            50% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        #particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            z-index: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <h1 class="header-title">STYLIZE IT</h1>
+    </header>
+    <div class="container">
+        <div class="error-code">404</div>
+        <div class="error-message">Not Found</div>
+        <div class="emoji">🙁</div>
+        <div class="message">The page you are looking for doesn't exist.</div>
+    </div>
+    <canvas id="particles"></canvas>
+
+    <script>
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+
+        function createParticle(x, y) {
+            const size = Math.random() * 5 + 1;
+            const speedX = Math.random() * 3 - 1.5;
+            const speedY = Math.random() * 3 - 1.5;
+            const color = 'rgba(0, 123, 255, 0.8)'; // Match the error color
+
+            particles.push({ x, y, size, speedX, speedY, color });
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < particles.length; i++) {
+                let particle = particles[i];
+
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                ctx.fillStyle = particle.color;
+                ctx.fill();
+
+                particle.x += particle.speedX;
+                particle.y += particle.speedY;
+
+                if (particle.size > 0.2) {
+                    particle.size -= 0.1;
+                }
+
+                if (particle.size <= 0.2) {
+                    particles.splice(i, 1);
+                    i--;
+                }
+            }
+
+            requestAnimationFrame(animateParticles);
+        }
+
+        function createRandomParticles() {
+            for (let i = 0; i < 5; i++) {
+                createParticle(Math.random() * canvas.width, Math.random() * canvas.height);
+            }
+        }
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        setInterval(createRandomParticles, 100);
+        animateParticles();
+    </script>
+</body>
+
+</html>
