@@ -1,13 +1,14 @@
 package handlers
 
 import (
+	"artweb/asciiart"
+	"fmt"
+	"html"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"strings"
-
-	"artweb/asciiart"
 )
 
 type PageData struct {
@@ -123,4 +124,49 @@ func InternalServerHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	tpl.Execute(w, nil)
+}
+
+// DownloadHandler handles the download of ASCII art in different formats
+func DownloadHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		FourohFiveHandler(w, r)
+		return
+	}
+
+	// Extract the format and ASCII art from query parameters
+	asciiArt := r.URL.Query().Get("asciiArt")
+	format := r.URL.Query().Get("format")
+	if asciiArt == "" || format == "" {
+		BadRequestHandler(w, r)
+		return
+	}
+
+	// Sanitize ASCII art to avoid any potential issues with special characters
+	asciiArt = strings.ReplaceAll(asciiArt, "\r", "\n")
+
+	switch format {
+	case "txt":
+		// Set headers for TXT file download
+		w.Header().Set("Content-Type", "text/plain")
+		w.Header().Set("Content-Disposition", "attachment; filename=ascii-art.txt")
+		w.Header().Set("Content-Length", fmt.Sprint(len(asciiArt)))
+		w.Write([]byte(asciiArt))
+
+	case "html":
+		// Escape HTML entities to prevent XSS attacks
+		escapedAsciiArt := html.EscapeString(asciiArt)
+
+		// Set headers for HTML file download
+		w.Header().Set("Content-Type", "text/html")
+		w.Header().Set("Content-Disposition", "attachment; filename=ascii-art.html")
+		htmlContent := fmt.Sprintf("<html><body><pre>%s</pre></body></html>", escapedAsciiArt)
+		w.Header().Set("Content-Length", fmt.Sprint(len(htmlContent)))
+		w.Write([]byte(htmlContent))
+
+	default:
+		BadRequestHandler(w, r)
+		return
+	}
+
+	log.Printf("200 OK: ASCII art file downloaded successfully as %s\n", format)
 }
