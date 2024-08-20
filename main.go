@@ -19,6 +19,7 @@ func main() {
 	// Handle all requests to the root path
 	http.HandleFunc("/", handlers.HomeHandler)
 	http.HandleFunc("/ascii-art", handlers.AsciiArtHandler)
+	http.HandleFunc("/download", handlers.DownloadHandler)
 	http.HandleFunc("/400", handlers.BadRequestHandler)
 	http.HandleFunc("/404", handlers.NotFoundHandler)
 	http.HandleFunc("/405", handlers.FourohFiveHandler)
