@@ -72,6 +72,7 @@
         color: #000000;
     }
     #result {
+        /* white-space: pre-wrap; */
         width: 50hw;
         height: 40vh;
         padding: 20px;
@@ -115,6 +116,46 @@
         height: 24px;
         margin: 0 5px;
     }
+    .download-form {
+    margin-top: 20px;
+    padding: 20px;
+    background: rgba(8, 8, 171, 0.5);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+    text-align: center;
+}
+
+.download-form label {
+    font-size: 1.2em;
+    margin-right: 10px;
+    color: #fff;
+}
+
+.download-form select {
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #2c4f83;
+    color: #f0f0f0;
+    border: 1px solid #2d2d2d;
+    font-size: 1em;
+    margin-right: 10px;
+}
+
+.download-form button {
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: none;
+    background-color: #117d9b;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.download-form button:hover {
+    background-color: rgb(192, 255, 67);
+    color: #000000;
+}
+
     @media only screen and (max-width: 768px) {
         .header-title {
             font-size: 1.8em;
@@ -165,6 +206,16 @@
         <div id="result">
             <pre>{{.Result}}</pre>
         </div>
+        <form action="/download" method="get" class="download-form">
+            <input type="hidden" name="asciiArt" value="{{ .Result }}">
+            <label for="format">Choose a format:</label>
+            <select name="format" id="format">
+                <option value="txt">TXT</option>
+                <option value="html">HTML</option>
+            </select>
+            <button type="submit">Download ASCII Art</button>
+        </form>
+        
     </main>
     <footer class="footer">
         <div class="footer-content">
@@ -202,5 +253,6 @@
             </div>
         </div>
     </footer>
+
 </body>
 </html>
